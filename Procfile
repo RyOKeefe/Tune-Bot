@@ -1,1 +1,1 @@
-web: gunicorn server_config:tune-bot $PORT
+web: gunicorn server_config:tune-bot
