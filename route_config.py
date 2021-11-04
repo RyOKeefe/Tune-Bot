@@ -27,7 +27,7 @@ def recommendation():
     track_list = []
     artist_list = []
     try:
-        print(request.data)
+        print(request.form)
         for genre in request.json["queryResult"]["parameters"]["music-genre"]:
             genre_list.append(genre)
     except TypeError:
