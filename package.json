@@ -5,7 +5,8 @@
   "main": "server_config.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "pip install -r requirements.txt && python server_config.py"
+    "prestart": "pip install -r requirements.txt",
+    "start": "python server_config.py"
   },
   "repository": {
     "type": "git",
