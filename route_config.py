@@ -43,6 +43,4 @@ def recommendation():
     except TypeError:
         print("Invalid Genre Input")
 
-
-    temp = get_recommendations(genres=genre_list, artists=artist_list, tracks=track_list)
     return get_recommendations(genres=genre_list, artists=artist_list, tracks=track_list)
