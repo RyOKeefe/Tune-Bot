@@ -38,7 +38,7 @@ def recommendation():
             for track in request.json["queryResult"]["parameters"]["song-name"]:
                 track_list.append(get_song(track, limit=1)[0]['id'])
         else:
-            print(json.parse(request.data))
+            print(json.loads(request.data))
 
     except TypeError:
         print("Invalid Genre Input")
