@@ -1,6 +1,7 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request
+import json
 from API_Calls import *
-
+import os
 # app reference
 
 app = Flask(__name__)
@@ -27,16 +28,21 @@ def recommendation():
     track_list = []
     artist_list = []
     try:
-        # print(jsonify(request.data))
-        for genre in request.json["queryResult"]["parameters"]["music-genre"]:
-            genre_list.append(genre)
+        if os.popen('hostname').read() == 'DESKTOP-A8S8UV7':
+            for genre in request.json["queryResult"]["parameters"]["music-genre"]:
+                genre_list.append(genre)
+
+            for artist in request.json["queryResult"]["parameters"]["music-artist"]:
+                artist_list.append(get_artist(artist, limit=1)[0]['id'])
+
+            for track in request.json["queryResult"]["parameters"]["song-name"]:
+                track_list.append(get_song(track, limit=1)[0]['id'])
+        else:
+            print(json.parse(request.data))
+
     except TypeError:
         print("Invalid Genre Input")
 
-    for artist in request.json["queryResult"]["parameters"]["music-artist"]:
-        artist_list.append(get_artist(artist, limit=1)[0]['id'])
 
-    for track in request.json["queryResult"]["parameters"]["song-name"]:
-        track_list.append(get_song(track, limit=1)[0]['id'])
     temp = get_recommendations(genres=genre_list, artists=artist_list, tracks=track_list)
     return get_recommendations(genres=genre_list, artists=artist_list, tracks=track_list)
