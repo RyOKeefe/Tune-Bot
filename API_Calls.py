@@ -1,9 +1,9 @@
 import os
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
-#from secret_key import client_ID, client_secret
-client_ID = os.environ.get("client_ID")
-client_secret = os.environ.get("client_secret")
+from secret_key import client_ID, client_secret
+#client_ID = os.environ.get("client_ID")
+#client_secret = os.environ.get("client_secret")
 
 
 spotify = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials(client_ID, client_secret))
@@ -33,7 +33,7 @@ def get_playlist(playlist_name, limit=1):
     return spotify.search(playlist_name, type='playlist', limit=limit)['playlists']['items']
 
 
-def get_recommendations(genres=[], tracks=[], artists=[], limit=1):
+def get_recommendations(genres=[], tracks=[], artists=[], limit=20):
     return spotify.recommendations(seed_genres=genres, seed_artists=artists, seed_tracks=tracks, limit=limit)
 
 
