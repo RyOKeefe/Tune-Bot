@@ -11,6 +11,11 @@ def before_request():
     print('request received')
 
 
+@app.route("/")
+def home_view():
+    return "<h1>Welcome to Tune Bot</h1>"
+
+
 @app.route('/api/recommendation')
 def recommendations_default():
     return "Welcome to tunebot backend. Make a request."
