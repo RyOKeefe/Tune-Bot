@@ -52,6 +52,7 @@ def recommendation():
         print("Invalid Genre Input")
         return get_recommendations(genres=[], artists=artist_list, tracks=track_list)
     except:
+        print("Complete Failure")
         return get_recommendations(genres=[], artists=["Katy Perry"], tracks=["California Girls"])
-
+    print("Successful Recommendation")
     return get_recommendations(genres=genre_list, artists=artist_list, tracks=track_list)
