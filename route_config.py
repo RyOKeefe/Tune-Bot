@@ -27,6 +27,7 @@ def recommendation():
     genre_list = []
     track_list = []
     artist_list = []
+    response = None
     try:
         req_data = json.loads(request.data)
         for genre in req_data["queryResult"]["parameters"]["music-genre"]:
@@ -41,10 +42,23 @@ def recommendation():
     except TypeError as error:
         print("Invalid Genre Input")
         print(error)
-        return get_recommendations(genres=[], artists=artist_list, tracks=track_list)
+        response = get_recommendations(genres=[], artists=artist_list, tracks=track_list)
     except Exception as error:
         print("Total failure")
         print(error)
-        return get_recommendations(genres=[], artists=[get_artist("Katy Perry",limit=1)[0]['id']], tracks=[get_song("California Girls",limit=1)[0]['id']])
+        response = get_recommendations(genres=[], artists=[get_artist("Katy Perry",limit=1)[0]['id']], tracks=[get_song("California Girls",limit=1)[0]['id']])
     print("Successful Recommendation")
-    return get_recommendations(genres=genre_list, artists=artist_list, tracks=track_list)
+    response = get_recommendations(genres=genre_list, artists=artist_list, tracks=track_list)
+
+    return {
+  "fulfillmentMessages": [
+    {
+      "text": {
+        "text": [
+          "You should try listening to "+response['tracks'][0]['name']+" by " + response['tracks'][0]['artists'][0]['name']
+        ]
+      }
+    }
+  ]
+}
+
