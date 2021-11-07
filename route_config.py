@@ -53,6 +53,6 @@ def recommendation():
         return get_recommendations(genres=[], artists=artist_list, tracks=track_list)
     except:
         print("Complete Failure")
-        return get_recommendations(genres=[], artists=[get_artist("Katy Perry",limit=1)], tracks=[get_song("California Girls",limit=1)])
+        return get_recommendations(genres=[], artists=get_artist("Katy Perry",limit=1), tracks=get_song("California Girls",limit=1))
     print("Successful Recommendation")
     return get_recommendations(genres=genre_list, artists=artist_list, tracks=track_list)
