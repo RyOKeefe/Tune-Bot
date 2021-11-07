@@ -1,9 +1,8 @@
 import os
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
-if os.popen('hostname').read() == 'DESKTOP-A8S8UV7':
-    from secret_key import client_ID, client_secret
-else:
+from secret_key import client_ID, client_secret
+if os.popen('hostname').read() != 'DESKTOP-A8S8UV7\n':
     client_ID = os.environ.get("client_ID")
     client_secret = os.environ.get("client_secret")
 
@@ -36,7 +35,7 @@ def get_playlist(playlist_name, limit=1):
 
 
 def get_recommendations(genres=[], tracks=[], artists=[], limit=20):
-    return spotify.recommendations(seed_genres=genres, seed_artists=artists, seed_tracks=tracks, limit=limit)
+   return spotify.recommendations(seed_genres=genres, seed_artists=artists, seed_tracks=tracks, limit=limit)
 
 
 def main():

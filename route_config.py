@@ -1,6 +1,6 @@
 from flask import Flask, request
 import json
-from API_Calls import *
+from API_Calls import get_recommendations, get_playlist, get_song, get_artist, get_album
 import os
 # app reference
 
@@ -28,31 +28,23 @@ def recommendation():
     track_list = []
     artist_list = []
     try:
-        if os.popen('hostname').read() == 'DESKTOP-A8S8UV7':
-            for genre in request.json["queryResult"]["parameters"]["music-genre"]:
-                genre_list.append(genre)
+        req_data = json.loads(request.data)
+        for genre in req_data["queryResult"]["parameters"]["music-genre"]:
+            genre_list.append(genre)
 
-            for artist in request.json["queryResult"]["parameters"]["music-artist"]:
-                artist_list.append(get_artist(artist, limit=1)[0]['id'])
+        for artist in req_data["queryResult"]["parameters"]["music-artist"]:
+            artist_list.append(get_artist(artist, limit=1)[0]['id'])
 
-            for track in request.json["queryResult"]["parameters"]["song-name"]:
-                track_list.append(get_song(track, limit=1)[0]['id'])
-        else:
-            req_data = json.loads(request.data)
-            for genre in req_data["queryResult"]["parameters"]["music-genre"]:
-                genre_list.append(genre)
+        for track in req_data["queryResult"]["parameters"]["song-name"]:
+            track_list.append(get_song(track, limit=1)[0]['id'])
 
-            for artist in req_data["queryResult"]["parameters"]["music-artist"]:
-                artist_list.append(get_artist(artist, limit=1)[0]['id'])
-
-            for track in req_data["queryResult"]["parameters"]["song-name"]:
-                track_list.append(get_song(track, limit=1)[0]['id'])
-
-    except TypeError:
+    except TypeError as error:
         print("Invalid Genre Input")
+        print(error)
         return get_recommendations(genres=[], artists=artist_list, tracks=track_list)
-    except:
-        print("Complete Failure")
-        return get_recommendations(genres=[], artists=get_artist("Katy Perry",limit=1), tracks=get_song("California Girls",limit=1))
+    except Exception as error:
+        print("Total failure")
+        print(error)
+        return get_recommendations(genres=[], artists=[get_artist("Katy Perry",limit=1)[0]['id']], tracks=[get_song("California Girls",limit=1)[0]['id']])
     print("Successful Recommendation")
     return get_recommendations(genres=genre_list, artists=artist_list, tracks=track_list)
