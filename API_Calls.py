@@ -1,7 +1,7 @@
 import os
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
-from secret_key import client_ID, client_secret
+#from secret_key import client_ID, client_secret
 if os.popen('hostname').read() != 'DESKTOP-A8S8UV7\n':
     client_ID = os.environ.get("client_ID")
     client_secret = os.environ.get("client_secret")
