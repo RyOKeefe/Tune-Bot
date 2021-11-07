@@ -55,7 +55,7 @@ def recommendation():
     {
       "text": {
         "text": [
-          "You should try listening to "+response['tracks'][0]['name']+" by " + response['tracks'][0]['artists'][0]['name']
+          "You should try listening to "+response['tracks'][0]['name']+" by " + response['tracks'][0]['artists'][0]['name']+". Would you like another music recommendation?"
         ]
       }
     }
