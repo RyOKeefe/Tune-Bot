@@ -51,10 +51,10 @@ def recommendation():
                                        tracks=[get_song("California Girls", limit=1)[0]['id']])
     print("Successful Recommendation")
     response = get_recommendations(genres=genre_list, artists=artist_list, tracks=track_list)
-    if len(genre_list) > 0:
-        print("Genre Input:" + genre_list[0])
-    if len(artist_list) > 0:
-        print("Artist Input:" + artist_list[0])
+    if len(req_data["queryResult"]["parameters"]["music-genre"]) > 0:
+        print("Genre Input:" + req_data["queryResult"]["parameters"]["music-genre"][0])
+    if len(req_data["queryResult"]["parameters"]["music-artist"]) > 0:
+        print("Artist Input:" + req_data["queryResult"]["parameters"]["music-artist"][0])
     print("Track recommendation:"+response['tracks'][0]['name'])
     print("Artist recommendation:"+response['tracks'][0]['artists'][0]['name'])
 
