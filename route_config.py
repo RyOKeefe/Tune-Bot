@@ -2,6 +2,7 @@ from flask import Flask, request
 import json
 from API_Calls import get_recommendations, get_playlist, get_song, get_artist, get_album
 import os
+
 # app reference
 
 app = Flask(__name__)
@@ -46,19 +47,26 @@ def recommendation():
     except Exception as error:
         print("Total failure")
         print(error)
-        response = get_recommendations(genres=[], artists=[get_artist("Katy Perry",limit=1)[0]['id']], tracks=[get_song("California Girls",limit=1)[0]['id']])
+        response = get_recommendations(genres=[], artists=[get_artist("Katy Perry", limit=1)[0]['id']],
+                                       tracks=[get_song("California Girls", limit=1)[0]['id']])
     print("Successful Recommendation")
     response = get_recommendations(genres=genre_list, artists=artist_list, tracks=track_list)
+    if len(genre_list) > 0:
+        print("Genre Input:" + genre_list[0])
+    if len(artist_list) > 0:
+        print("Artist Input:" + artist_list[0])
+    print("Track recommendation:"+response['tracks'][0]['name'])
+    print("Artist recommendation:"+response['tracks'][0]['artists'][0]['name'])
 
     return {
-  "fulfillmentMessages": [
-    {
-      "text": {
-        "text": [
-          "You should try listening to "+response['tracks'][0]['name']+" by " + response['tracks'][0]['artists'][0]['name']+". Would you like another music recommendation?"
+        "fulfillmentMessages": [
+            {
+                "text": {
+                    "text": [
+                        "You should try listening to " + response['tracks'][0]['name'] + " by " +
+                        response['tracks'][0]['artists'][0]['name'] + ". Would you like another music recommendation?"
+                    ]
+                }
+            }
         ]
-      }
     }
-  ]
-}
-

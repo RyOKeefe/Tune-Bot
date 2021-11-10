@@ -2,12 +2,9 @@ import os
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 
-client_ID = "7210549402da452181079cba64f081c7"
-client_secret = "19ac301df3d9488d942c84fd9e3062cc"
 
-if os.popen('hostname').read() != 'DESKTOP-RJLB4BL\n':
-    client_ID = os.environ.get("client_ID")
-    client_secret = os.environ.get("client_secret")
+client_ID = os.environ.get("client_ID")
+client_secret = os.environ.get("client_secret")
 
 
 spotify = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials(client_ID, client_secret))
