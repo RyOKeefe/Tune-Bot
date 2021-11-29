@@ -42,19 +42,19 @@ def iterate():
         for track in req_data["queryResult"]["parameters"]["song-name"]:
             track_list.append(get_song(track, limit=1)[0]['id'])
         print("Successful Recommendation")
-        response = get_recommendations(genres=genre_list, artists=artist_list, tracks=track_list)# TODO: Filter on prev_recommendation
+        response = filter(get_recommendations(genres=genre_list, artists=artist_list, tracks=track_list),artist_list)
         prev_recommendation['prev_song'] = response['tracks'][0]['name']
         prev_recommendation['prev_artist'] = response['tracks'][0]['artists'][0]['name']
 
     except TypeError as error:
         print("Invalid Genre Input")
         print(error)
-        response = get_recommendations(genres=[], artists=artist_list, tracks=track_list)
+        response = filter(get_recommendations(genres=[], artists=artist_list, tracks=track_list),artist_list)
     except Exception as error:
         print("Total failure")
         print(error)
-        response = get_recommendations(genres=[], artists=[get_artist("Katy Perry", limit=1)[0]['id']],
-                                       tracks=[get_song("California Girls", limit=1)[0]['id']])
+        response = filter(get_recommendations(genres=[], artists=[get_artist("Katy Perry", limit=1)[0]['id']],
+                                       tracks=[get_song("California Girls", limit=1)[0]['id']]),artist_list)
 
     if len(req_data["queryResult"]["parameters"]["song-name"]) > 0:
         print("Track Input:" + req_data["queryResult"]["parameters"]["song-name"][0])
@@ -96,17 +96,17 @@ def recommendation():
 
         for track in req_data["queryResult"]["parameters"]["song-name"]:
             track_list.append(get_song(track, limit=1)[0]['id'])
-        print("Successful Recommendation")  # TODO:Filter on req_data["queryResult"]["parameters"]["music-artist"][0]
-        response = get_recommendations(genres=genre_list, artists=artist_list, tracks=track_list)
+        print("Successful Recommendation")
+        response = filter(get_recommendations(genres=genre_list, artists=artist_list, tracks=track_list),artist_list)
     except TypeError as error: #depreciated
         print("Invalid Genre Input, depreciated")
         print(error)
-        response = get_recommendations(genres=[], artists=artist_list, tracks=track_list)
+        response = filter(get_recommendations(genres=[], artists=artist_list, tracks=track_list),artist_list)
     except Exception as error:
         print("Total failure")
         print(error)
-        response = get_recommendations(genres=[], artists=[get_artist("Katy Perry", limit=1)[0]['id']],
-                                       tracks=[get_song("California Girls", limit=1)[0]['id']])
+        response = filter(get_recommendations(genres=[], artists=[get_artist("Katy Perry", limit=1)[0]['id']],
+                                       tracks=[get_song("California Girls", limit=1)[0]['id']]),artist_list)
 
     if len(req_data["queryResult"]["parameters"]["song-name"]) > 0:
         print("Track Input:" + req_data["queryResult"]["parameters"]["song-name"][0])
@@ -150,17 +150,17 @@ def artist_recommendation():
 
         for track in req_data["queryResult"]["parameters"]["song-name"]:
             track_list.append(get_song(track, limit=1)[0]['id'])
-        print("Successful Recommendation")  # TODO:Filter on req_data["queryResult"]["parameters"]["music-artist"][0]
-        response = get_recommendations(genres=genre_list, artists=artist_list, tracks=track_list)
+        print("Successful Recommendation")
+        response = filter(get_recommendations(genres=genre_list, artists=artist_list, tracks=track_list),artist_list)
     except TypeError as error: #depreciated
         print("Invalid Genre Input, depreciated")
         print(error)
-        response = get_recommendations(genres=[], artists=artist_list, tracks=track_list)
+        response = filter(get_recommendations(genres=[], artists=artist_list, tracks=track_list),artist_list)
     except Exception as error:
         print("Total failure")
         print(error)
-        response = get_recommendations(genres=[], artists=[get_artist("Katy Perry", limit=1)[0]['id']],
-                                       tracks=[get_song("California Girls", limit=1)[0]['id']])
+        response = filter(get_recommendations(genres=[], artists=[get_artist("Katy Perry", limit=1)[0]['id']],
+                                       tracks=[get_song("California Girls", limit=1)[0]['id']]),artist_list)
 
     if len(req_data["queryResult"]["parameters"]["song-name"]) > 0:
         print("Track Input:" + req_data["queryResult"]["parameters"]["song-name"][0])
@@ -170,7 +170,7 @@ def artist_recommendation():
         print("Artist Input:" + req_data["queryResult"]["parameters"]["music-artist"][0])
     print("Track recommendation:" + response['tracks'][0]['name'])
     print("Artist recommendation:" + response['tracks'][0]['artists'][0]['name'])
-    prev_recommendation['prev_song'] = response['tracks'][0]['name']
+    prev_recommendation['prev_song'] = None
     prev_recommendation['prev_artist'] = response['tracks'][0]['artists'][0]['name']
 
 
@@ -187,3 +187,11 @@ def artist_recommendation():
             }
         ]
     }
+
+#TODO:Filter on artist_list, prev_recommendation['prev_artist'] and prev_recommendation['prev_song'] against
+#unfiltered_response["queryResult"]["parameters"]["music-artist"] and unfiltered_response["queryResult"]["parameters"]["song-name"]
+#ideally does not allow unfiltered_response to be empty
+#keep in mind prev_recommendation can be None
+def filter(unfiltered_response,artist_list):
+    filtered_response = unfiltered_response
+    return filtered_response
