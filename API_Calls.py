@@ -36,7 +36,19 @@ def get_playlist(playlist_name, limit=1):
 
 def get_recommendations(genres=[], tracks=[], artists=[], limit=20):
    return spotify.recommendations(seed_genres=genres, seed_artists=artists, seed_tracks=tracks, limit=limit)
-
+   
+def remove_und(response, tracks=[], artists=[]):
+    print('called function')
+    for ind, x in enumerate(response['tracks']):
+        print('iterating x at pos ')
+        print(ind)
+        for a in artists:
+            if x['artists'][0]['name'] == a:
+                del response['tracks'][ind]
+        for t in tracks:
+            if x['name'] == t:
+                del response['tracks'][ind]
+    return response
 
 def main():
     data = get_playlist("This Is Abba")

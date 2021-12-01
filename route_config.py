@@ -1,6 +1,6 @@
 from flask import Flask, request
 import json
-from API_Calls import get_recommendations, get_playlist, get_song, get_artist, get_album
+from API_Calls import get_recommendations, get_playlist, get_song, get_artist, get_album, remove_und
 import os
 
 # app reference
@@ -98,6 +98,7 @@ def recommendation():
             track_list.append(get_song(track, limit=1)[0]['id'])
         print("Successful Recommendation")
         response = filter(get_recommendations(genres=genre_list, artists=artist_list, tracks=track_list),artist_list)
+        response = remove_und(response, artists=artist_list, tracks=track_list)
     except TypeError as error: #depreciated
         print("Invalid Genre Input, depreciated")
         print(error)
@@ -120,7 +121,11 @@ def recommendation():
     prev_recommendation['prev_artist'] = response['tracks'][0]['artists'][0]['name']
 
 
+    filetest = open('test_json.json')
 
+    test_response = json.load(filetest)
+    return remove_und(test_response, artists = ['Drake'])
+    
     return {
         "fulfillmentMessages": [
             {
@@ -138,7 +143,7 @@ def recommendation():
 def artist_recommendation():
     genre_list = []
     track_list = []
-    artist_list = []
+    artist_list = [] 
     response = None
     try:
         req_data = json.loads(request.data)
@@ -152,6 +157,7 @@ def artist_recommendation():
             track_list.append(get_song(track, limit=1)[0]['id'])
         print("Successful Recommendation")
         response = filter(get_recommendations(genres=genre_list, artists=artist_list, tracks=track_list),artist_list)
+        response = remove_und(response, artists=artist_list, tracks=track_list)
     except TypeError as error: #depreciated
         print("Invalid Genre Input, depreciated")
         print(error)
