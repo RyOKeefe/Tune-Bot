@@ -38,10 +38,10 @@ def get_recommendations(genres=[], tracks=[], artists=[], limit=20):
    return spotify.recommendations(seed_genres=genres, seed_artists=artists, seed_tracks=tracks, limit=limit)
    
 def remove_und(response, tracks=[], artists=[]):
-    print('called function')
+    #print('called filter')
     for ind, x in enumerate(response['tracks']):
-        print('iterating x at pos ')
-        print(ind)
+        #print('iterating x at pos ')
+        #print(ind)
         for a in artists:
             if x['artists'][0]['name'] == a:
                 del response['tracks'][ind]
