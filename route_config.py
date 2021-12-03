@@ -12,7 +12,8 @@ prev_recommendation = {'prev_artist': None,
 
 @app.before_request
 def before_request():
-    print('request received')
+    if "type" in json.loads(request.data)["queryResult"]["parameters"]:
+        print("Recommending: "+json.loads(request.data)["queryResult"]["parameters"]["type"][0])
 
 
 @app.route("/")
@@ -25,14 +26,23 @@ def recommendations_default():
     return "Welcome to tunebot backend. Make a request."
 
 
-@app.route('/api/recommendation/iterate', methods=['POST'])
-def iterate():
+@app.route('/api/recommendation', methods=['POST'])
+def recommendation():
+    req_data = json.loads(request.data)
+    if "type" in json.loads(request.data)["queryResult"]["parameters"]:
+        if req_data["queryResult"]["parameters"]["type"][0] == "song":
+            return base_recommendation(req_data)
+        if req_data["queryResult"]["parameters"]["type"][0] == "artist":
+            return artist_recommendation(req_data)
+
+
+def iterate(req_data):
     genre_list = []
     track_list = []
     artist_list = []
     response = None
     try:
-        req_data = json.loads(request.data)
+
         for genre in req_data["queryResult"]["parameters"]["music-genre"]:
             genre_list.append(genre)
 
@@ -63,13 +73,9 @@ def iterate():
     if len(req_data["queryResult"]["parameters"]["music-artist"]) > 0:
         print("Artist Input:" + req_data["queryResult"]["parameters"]["music-artist"][0])
 
-    response = remove_und(response,
-                          tracks=[prev_recommendation['prev_song']],
-                          artists=[prev_recommendation['prev_artist']] + req_data["queryResult"]["parameters"]["music-artist"])
+
     print("Track recommendation:" + response['tracks'][0]['name'])
     print("Artist recommendation:" + response['tracks'][0]['artists'][0]['name'])
-
-
 
     return {
         "fulfillmentMessages": [
@@ -85,14 +91,12 @@ def iterate():
     }
 
 
-@app.route('/api/recommendation', methods=['POST'])
-def recommendation():
+def base_recommendation(req_data):
     genre_list = []
     track_list = []
     artist_list = []
     response = None
     try:
-        req_data = json.loads(request.data)
         for genre in req_data["queryResult"]["parameters"]["music-genre"]:
             genre_list.append(genre)
 
@@ -128,8 +132,6 @@ def recommendation():
     prev_recommendation['prev_song'] = response['tracks'][0]['name']
     prev_recommendation['prev_artist'] = response['tracks'][0]['artists'][0]['name']
 
-
-
     return {
         "fulfillmentMessages": [
             {
@@ -144,14 +146,12 @@ def recommendation():
     }
 
 
-@app.route('/api/recommendation/artist', methods=['POST'])
-def artist_recommendation():
+def artist_recommendation(req_data):
     genre_list = []
     track_list = []
     artist_list = []
     response = None
     try:
-        req_data = json.loads(request.data)
         for genre in req_data["queryResult"]["parameters"]["music-genre"]:
             genre_list.append(genre)
 
@@ -180,7 +180,9 @@ def artist_recommendation():
     if len(req_data["queryResult"]["parameters"]["music-artist"]) > 0:
         print("Artist Input:" + req_data["queryResult"]["parameters"]["music-artist"][0])
 
-    response = remove_und(response, artists=artist_list + [prev_recommendation['prev_artist']])
+    response = remove_und(response,
+                          tracks=[prev_recommendation['prev_song']],
+                          artists=[prev_recommendation['prev_artist']] + artist_list)
     print("Track recommendation:" + response['tracks'][0]['name'])
     print("Artist recommendation:" + response['tracks'][0]['artists'][0]['name'])
     prev_recommendation['prev_song'] = None
