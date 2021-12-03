@@ -114,8 +114,18 @@ def base_recommendation(req_data):
     except Exception as error:
         print("Total failure")
         print(error)
-        response = get_recommendations(genres=[], artists=[get_artist("Katy Perry", limit=1)[0]['id']],
-                                       tracks=[get_song("California Girls", limit=1)[0]['id']])
+        eturn
+        {
+            "fulfillmentMessages": [
+                {
+                    "text": {
+                        "text": [
+                            "Bot Failure Song"
+                        ]
+                    }
+                }
+            ]
+        }
 
     if len(req_data["queryResult"]["parameters"]["song-name"]) > 0:
         print("Track Input:" + req_data["queryResult"]["parameters"]["song-name"][0])
@@ -172,6 +182,17 @@ def artist_recommendation(req_data):
         print(error)
         response = get_recommendations(genres=[], artists=[get_artist("Katy Perry", limit=1)[0]['id']],
                                        tracks=[get_song("California Girls", limit=1)[0]['id']])
+        return {
+        "fulfillmentMessages": [
+            {
+                "text": {
+                    "text": [
+                        "Bot Failure Artist"
+                    ]
+                }
+            }
+        ]
+        }
 
     if len(req_data["queryResult"]["parameters"]["song-name"]) > 0:
         print("Track Input:" + req_data["queryResult"]["parameters"]["song-name"][0])
