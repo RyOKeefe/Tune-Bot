@@ -41,6 +41,19 @@ def recommendation():
             return base_recommendation(req_data)
         if req_data["queryResult"]["parameters"]["type"][0] == "artist":
             return artist_recommendation(req_data)
+    else:
+        return
+        {
+            "fulfillmentMessages": [
+                {
+                    "text": {
+                        "text": [
+                            "Bot Failure Song"
+                        ]
+                    }
+                }
+            ]
+        }
 
 
 def base_recommendation(req_data):
