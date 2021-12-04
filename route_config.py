@@ -47,7 +47,7 @@ def recommendation():
                 {
                     "text": {
                         "text": [
-                            "Bot Failure Song"
+                            "Bot Failure Type"
                         ]
                     }
                 }
