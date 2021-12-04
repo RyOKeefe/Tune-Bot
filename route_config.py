@@ -16,7 +16,7 @@ def before_request():
         if "queryResult" in json.loads(request.data):
             if "parameters" in json.loads(request.data)["queryResult"]:
                 if "type" in json.loads(request.data)["queryResult"]["parameters"]:
-                    print("Recommending: "+json.loads(request.data)["queryResult"]["parameters"]["type"][0])
+                    print("Recommending: "+json.loads(request.data)["queryResult"]["parameters"]["type"])
         else:
             print("no type")
     except json.decoder.JSONDecodeError:
@@ -37,9 +37,9 @@ def recommendations_default():
 def recommendation():
     req_data = json.loads(request.data)
     if "type" in json.loads(request.data)["queryResult"]["parameters"]:
-        if req_data["queryResult"]["parameters"]["type"][0] == "song":
+        if req_data["queryResult"]["parameters"]["type"] == "song":
             return base_recommendation(req_data)
-        if req_data["queryResult"]["parameters"]["type"][0] == "artist":
+        if req_data["queryResult"]["parameters"]["type"] == "artist":
             return artist_recommendation(req_data)
     else:
         return {
