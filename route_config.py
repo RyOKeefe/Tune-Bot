@@ -42,8 +42,7 @@ def recommendation():
         if req_data["queryResult"]["parameters"]["type"][0] == "artist":
             return artist_recommendation(req_data)
     else:
-        return
-        {
+        return {
             "fulfillmentMessages": [
                 {
                     "text": {
@@ -79,8 +78,7 @@ def base_recommendation(req_data):
     except Exception as error:
         print("Total failure")
         print(error)
-        return
-        {
+        return {
             "fulfillmentMessages": [
                 {
                     "text": {
