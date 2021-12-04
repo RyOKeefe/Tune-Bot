@@ -12,8 +12,12 @@ prev_recommendation = {'prev_artist': None,
 
 @app.before_request
 def before_request():
-    if "type" in json.loads(request.data)["queryResult"]["parameters"]:
-        print("Recommending: "+json.loads(request.data)["queryResult"]["parameters"]["type"][0])
+    if "queryResult" in json.loads(request.data):
+        if "parameters" in json.loads(request.data)["queryResult"]:
+            if "type" in json.loads(request.data)["queryResult"]["parameters"]:
+                print("Recommending: "+json.loads(request.data)["queryResult"]["parameters"]["type"][0])
+    else:
+        print("no type")
 
 
 @app.route("/")
