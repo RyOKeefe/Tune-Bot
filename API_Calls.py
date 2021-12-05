@@ -46,8 +46,9 @@ def remove_und(response, tracks=[], artists=[]):
             if x['artists'][0]['name'] == a:
                 del response['tracks'][ind]
         for t in tracks:
-            if x['name'] == spotify.search(t, type='track', limit=1)['tracks']['items'][0]['name']:
-                del response['tracks'][ind]
+            if t is not "":
+                if x['name'] == spotify.search(t, type='track', limit=1)['tracks']['items'][0]['name']:
+                    del response['tracks'][ind]
     return response
 
 def main():

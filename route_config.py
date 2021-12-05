@@ -6,8 +6,8 @@ import os
 # app reference
 
 app = Flask(__name__)
-prev_recommendation = {'prev_artist': None,
-                       'prev_song': None}
+prev_recommendation = {'prev_artist': "",
+                       'prev_song': ""}
 
 
 @app.before_request
@@ -93,28 +93,30 @@ def base_recommendation(req_data):
     except Exception as error:
         print("Total failure")
         print(error)
+        response = get_recommendations(genres=[], artists=[get_artist("Katy Perry", limit=1)[0]['id']])
         return {
-            "fulfillmentMessages": [
-                {
-                    "text": {
-                        "text": [
-                            "Bot Failure Song"
-                        ]
-                    }
+        "fulfillmentMessages": [
+            {
+                "text": {
+                    "text": [
+                        "You should try listening to " + response['tracks'][0]['name'] + " by " +
+                        response['tracks'][0]['artists'][0]['name'] + ". Would you like another music recommendation?"
+                    ]
                 }
-            ]
+            }
+        ]
         }
+        # return {"fulfillmentMessages": [{"text": {"text": ["Bot Failure Song"]}}]}
 
-    if len(req_data["queryResult"]["parameters"]["song-name"]) > 0:
-        print("Track Input:" + req_data["queryResult"]["parameters"]["song-name"][0])
+
     if len(req_data["queryResult"]["parameters"]["music-genre"]) > 0:
         print("Genre Input:" + req_data["queryResult"]["parameters"]["music-genre"][0])
     if len(req_data["queryResult"]["parameters"]["music-artist"]) > 0:
         print("Artist Input:" + req_data["queryResult"]["parameters"]["music-artist"][0])
 
     response = remove_und(response,
-                          artists=req_data["queryResult"]["parameters"]["music-artist"],
-                          tracks=req_data["queryResult"]["parameters"]["song-name"])
+                          artists=[prev_recommendation['prev_artist']] + artist_list,
+                          tracks=[prev_recommendation['prev_song']])
     print("Track recommendation:" + response['tracks'][0]['name'])
     print("Artist recommendation:" + response['tracks'][0]['artists'][0]['name'])
     prev_recommendation['prev_song'] = response['tracks'][0]['name']
@@ -154,23 +156,25 @@ def artist_recommendation(req_data):
     except TypeError as error:  # depreciated
         print("Invalid Genre Input, depreciated")
         print(error)
-        response = get_recommendations(genres=[], artists=artist_list, tracks=track_list)
+        response = get_recommendations(genres=[], artists=artist_list)
     except Exception as error:
         print("Total failure")
         print(error)
-        response = get_recommendations(genres=[], artists=[get_artist("Katy Perry", limit=1)[0]['id']],
-                                       tracks=[get_song("California Girls", limit=1)[0]['id']])
+        response = get_recommendations(genres=[], artists=[get_artist("Katy Perry", limit=1)[0]['id']])
         return {
-        "fulfillmentMessages": [
-            {
-                "text": {
-                    "text": [
-                        "Bot Failure Artist"
-                    ]
+            "fulfillmentMessages": [
+                {
+                    "text": {
+                        "text": [
+                            "You should try listening to " +
+                            response['tracks'][0]['artists'][0][
+                                'name'] + ". Would you like another artist recommendation?"
+                        ]
+                    }
                 }
-            }
-        ]
+            ]
         }
+        #return {"fulfillmentMessages": [{"text": {"text": ["Bot Failure Artist"]}}]}
 
     if len(req_data["queryResult"]["parameters"]["music-genre"]) > 0:
         print("Genre Input:" + req_data["queryResult"]["parameters"]["music-genre"][0])
@@ -182,7 +186,7 @@ def artist_recommendation(req_data):
                           artists=[prev_recommendation['prev_artist']] + artist_list)
     print("Track recommendation:" + response['tracks'][0]['name'])
     print("Artist recommendation:" + response['tracks'][0]['artists'][0]['name'])
-    prev_recommendation['prev_song'] = None
+    prev_recommendation['prev_song'] = ""
     prev_recommendation['prev_artist'] = response['tracks'][0]['artists'][0]['name']
     return {
         "fulfillmentMessages": [
