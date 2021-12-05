@@ -65,17 +65,18 @@ def base_recommendation(req_data):
             genre_list.append(genre)
 
         for artist in req_data["queryResult"]["parameters"]["music-artist"]:
-            print("artist")
+
+            print(get_artist(artist, limit=1)[0]['id'])
             artist_list.append(get_artist(artist, limit=1)[0]['id'])
 
         for track in req_data["queryResult"]["parameters"]["song-name"]:
             track_list.append(get_song(track, limit=1)[0]['id'])
         print("Successful Recommendation")
-        response = get_recommendations(genres=genre_list, artists=artist_list, tracks=track_list)
+        response = get_recommendations(genres=genre_list, artists=artist_list)
     except TypeError as error:  # depreciated
         print("Invalid Genre Input, depreciated")
         print(error)
-        response = get_recommendations(genres=[], artists=artist_list, tracks=track_list)
+        response = get_recommendations(genres=[], artists=artist_list)
     except Exception as error:
         print("Total failure")
         print(error)
