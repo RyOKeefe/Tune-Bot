@@ -77,6 +77,19 @@ def base_recommendation(req_data):
         print("Invalid Genre Input, depreciated")
         print(error)
         response = get_recommendations(genres=[], artists=artist_list)
+    except IndexError as error:
+        print("Invalid Artist")
+        return {
+            "fulfillmentMessages": [
+                {
+                    "text": {
+                        "text": [
+                            "I'm sorry, one or more of your artists could not be found. Would you like to try again?"
+                        ]
+                    }
+                }
+            ]
+        }
     except Exception as error:
         print("Total failure")
         print(error)
@@ -136,7 +149,7 @@ def artist_recommendation(req_data):
         for track in req_data["queryResult"]["parameters"]["song-name"]:
             track_list.append(get_song(track, limit=1)[0]['id'])
         print("Successful Recommendation")
-        response = get_recommendations(genres=genre_list, artists=artist_list, tracks=track_list)
+        response = get_recommendations(genres=genre_list, artists=artist_list)
 
     except TypeError as error:  # depreciated
         print("Invalid Genre Input, depreciated")
@@ -159,8 +172,6 @@ def artist_recommendation(req_data):
         ]
         }
 
-    if len(req_data["queryResult"]["parameters"]["song-name"]) > 0:
-        print("Track Input:" + req_data["queryResult"]["parameters"]["song-name"][0])
     if len(req_data["queryResult"]["parameters"]["music-genre"]) > 0:
         print("Genre Input:" + req_data["queryResult"]["parameters"]["music-genre"][0])
     if len(req_data["queryResult"]["parameters"]["music-artist"]) > 0:
