@@ -65,6 +65,7 @@ def base_recommendation(req_data):
             genre_list.append(genre)
 
         for artist in req_data["queryResult"]["parameters"]["music-artist"]:
+            print("artist")
             artist_list.append(get_artist(artist, limit=1)[0]['id'])
 
         for track in req_data["queryResult"]["parameters"]["song-name"]:
@@ -99,7 +100,7 @@ def base_recommendation(req_data):
 
     response = remove_und(response,
                           artists=req_data["queryResult"]["parameters"]["music-artist"],
-                          tracks=track_list)
+                          tracks=req_data["queryResult"]["parameters"]["song-name"])
     print("Track recommendation:" + response['tracks'][0]['name'])
     print("Artist recommendation:" + response['tracks'][0]['artists'][0]['name'])
     prev_recommendation['prev_song'] = response['tracks'][0]['name']
