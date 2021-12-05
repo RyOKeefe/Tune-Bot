@@ -43,12 +43,13 @@ def remove_und(response, tracks=[], artists=[]):
         #print('iterating x at pos ')
         #print(ind)
         for a in artists:
-            if x['artists'][0]['name'] == a:
+            if x['artists'][0]['name'].lower() == a.lower():
                 del response['tracks'][ind]
         for t in tracks:
             if t != "":
-                if x['name'] == spotify.search(t, type='track', limit=1)['tracks']['items'][0]['name']:
+                if x['name'].lower() == t.lower():
                     del response['tracks'][ind]
+
     return response
 
 def main():

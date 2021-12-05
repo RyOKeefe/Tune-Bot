@@ -6,8 +6,8 @@ import os
 # app reference
 
 app = Flask(__name__)
-prev_recommendation = {'prev_artist': "",
-                       'prev_song': ""}
+prev_recommendation = {'prev_artist': [""],
+                       'prev_song': [""]}
 
 
 @app.before_request
@@ -115,12 +115,12 @@ def base_recommendation(req_data):
         print("Artist Input:" + req_data["queryResult"]["parameters"]["music-artist"][0])
 
     response = remove_und(response,
-                          artists=[prev_recommendation['prev_artist']] + artist_list,
-                          tracks=[prev_recommendation['prev_song']])
+                          artists=prev_recommendation['prev_artist'] + [req_data["queryResult"]["parameters"]["music-artist"][0]],
+                          tracks=prev_recommendation['prev_song'])
     print("Track recommendation:" + response['tracks'][0]['name'])
     print("Artist recommendation:" + response['tracks'][0]['artists'][0]['name'])
-    prev_recommendation['prev_song'] = response['tracks'][0]['name']
-    prev_recommendation['prev_artist'] = response['tracks'][0]['artists'][0]['name']
+    prev_recommendation['prev_song'] += [response['tracks'][0]['name']]
+    prev_recommendation['prev_artist'] += [response['tracks'][0]['artists'][0]['name']]
 
     return {
         "fulfillmentMessages": [
@@ -182,12 +182,12 @@ def artist_recommendation(req_data):
         print("Artist Input:" + req_data["queryResult"]["parameters"]["music-artist"][0])
 
     response = remove_und(response,
-                          tracks=[prev_recommendation['prev_song']],
-                          artists=[prev_recommendation['prev_artist']] + artist_list)
+                          tracks=prev_recommendation['prev_song'],
+                          artists=prev_recommendation['prev_artist'] + [req_data["queryResult"]["parameters"]["music-artist"][0]])
     print("Track recommendation:" + response['tracks'][0]['name'])
     print("Artist recommendation:" + response['tracks'][0]['artists'][0]['name'])
-    prev_recommendation['prev_song'] = ""
-    prev_recommendation['prev_artist'] = response['tracks'][0]['artists'][0]['name']
+    #prev_recommendation['prev_song'] = ""
+    prev_recommendation['prev_artist'] += [response['tracks'][0]['artists'][0]['name']]
     return {
         "fulfillmentMessages": [
             {
